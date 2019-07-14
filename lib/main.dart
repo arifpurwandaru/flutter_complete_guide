@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './question.dart';
+import './answer.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,24 +12,36 @@ class MyApp extends StatefulWidget {
   }
 }
 
-class _MyAppState extends State<MyApp>{
-
+class _MyAppState extends State<MyApp> {
+  static const questions = [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': ['Black', 'Red', 'Green', 'White']
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': ['Rabbit', 'Snake', 'Elephant', 'Tengu']
+    },
+    {
+      'questionText': 'Who\'s your favorite instructor?',
+      'answers': ['Max', 'Ben', 'Sruntul', 'Jangkrik']
+    }
+  ];
   var _questionIndex = 0;
 
   void _answerQuestion() {
-    setState(() {
-      _questionIndex = _questionIndex +1;
-      print('Answer chosen');
-    });
-    
+    if (_questionIndex < questions.length) {
+      setState(() {
+        _questionIndex = _questionIndex + 1;
+        print('Answer chosen');
+      });
+    }else{
+      
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?'
-    ];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -36,19 +49,12 @@ class _MyAppState extends State<MyApp>{
         ),
         body: Column(
           children: <Widget>[
-            Question(questions[_questionIndex]),
-            RaisedButton(
-              child: Text('Answer1'),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Answer2'),
-              onPressed: _answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Answer3'),
-              onPressed: _answerQuestion,
-            )
+            Question(questions[_questionIndex]['questionText']),
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((ans) {
+              //3 dots means spread the list into single component to avoid nested list
+              return Answer(_answerQuestion, ans);
+            }).toList()
           ],
         ),
       ),
